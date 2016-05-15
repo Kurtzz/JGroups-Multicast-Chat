@@ -1,6 +1,5 @@
 package pl.edu.agh.dsrg.sr.chat.service.receivers;
 
-import com.google.common.base.Function;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.jgroups.*;
 import pl.edu.agh.dsrg.sr.chat.gui.Chat;
@@ -10,9 +9,9 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newLinkedList;
-import static com.google.common.collect.Lists.transform;
 import static pl.edu.agh.dsrg.sr.chat.protos.ChatOperationProtos.*;
 
 /**
@@ -115,12 +114,8 @@ public class ManagementReceiver extends ReceiverAdapter {
     @Override
     public void viewAccepted(View view) {
         synchronized (channelUsers) {
-            List<String> currentUsers = transform(view.getMembers(), new Function<Address, String>() {
-                @Override
-                public String apply(Address address) {
-                    return managementChannel.getName(address);
-                }
-            });
+            List<String> currentUsers = view.getMembers().stream()
+                    .map(address -> managementChannel.getName(address)).collect(Collectors.toList());
 
             for (Map.Entry<String, List<String>> entry : channelUsers.entrySet()) {
                 String channelName = entry.getKey();
@@ -128,9 +123,7 @@ public class ManagementReceiver extends ReceiverAdapter {
                 List<String> lostUsers = newLinkedList(entry.getValue());
                 lostUsers.removeAll(currentUsers);
 
-                for (String lostUser : lostUsers) {
-                    gui.removeUser(channelName, lostUser);
-                }
+                lostUsers.forEach(lostUser -> gui.removeUser(channelName, lostUser));
 
                 entry.getValue().retainAll(currentUsers);
             }

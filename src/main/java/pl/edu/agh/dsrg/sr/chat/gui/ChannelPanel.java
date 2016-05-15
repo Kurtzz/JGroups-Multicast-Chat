@@ -4,13 +4,14 @@ import pl.edu.agh.dsrg.sr.chat.service.ChatService;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 
 /**
  * Created by P on 12.05.2016.
  */
-public class ChannelPanel extends JPanel{
+public class ChannelPanel extends JPanel implements ActionListener {
     private JButton leaveButton;
     private JPanel chatPanel;
     private JPanel sendPanel;
@@ -44,7 +45,33 @@ public class ChannelPanel extends JPanel{
         scrollTranscript.setViewportView(transcriptTextArea);
         scrollUsers.setViewportView(users);
 
-        ActionListener actionListener = e -> {
+        sendButton.addActionListener(this);
+        messageTextField.addActionListener(this);
+
+        leaveButton.addActionListener(this);
+    }
+
+    public void clear() {
+        transcriptTextArea.setText("");
+    }
+
+    public void append(String line) {
+        transcriptTextArea.append(line);
+    }
+
+    public void addUser(String nick) {
+        usersModel.addElement(nick);
+    }
+
+    public void removeUser(String nick) {
+        usersModel.removeElement(nick);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+
+        if (source == sendButton) {
             String message = messageTextField.getText();
 
             if (message == null || message.isEmpty()) {
@@ -62,12 +89,9 @@ public class ChannelPanel extends JPanel{
                 );
             }
             messageTextField.setText("");
-        };
+        }
 
-        sendButton.addActionListener(actionListener);
-        messageTextField.addActionListener(actionListener);
-
-        leaveButton.addActionListener(e -> {
+        if (source == leaveButton) {
             try {
                 chatService.leaveChannel(channelName);
             } catch (Exception e1) {
@@ -78,22 +102,6 @@ public class ChannelPanel extends JPanel{
                         JOptionPane.ERROR_MESSAGE
                 );
             }
-        });
-    }
-
-    public void clear() {
-        transcriptTextArea.setText("");
-    }
-
-    public void append(String line) {
-        transcriptTextArea.append(line);
-    }
-
-    public void addUser(String nick) {
-        usersModel.addElement(nick);
-    }
-
-    public void removeUser(String nick) {
-        usersModel.removeElement(nick);
+        }
     }
 }

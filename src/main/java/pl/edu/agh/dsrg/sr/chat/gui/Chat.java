@@ -19,6 +19,9 @@ public class Chat extends JFrame {
     private JoinPanel joinPanel;
     private ChatService chatService;
 
+    private static final int WIDTH = 400;
+    private static final int HEIGHT = 400;
+
     public Chat() throws Exception {
         super("Chat");
 
@@ -55,7 +58,7 @@ public class Chat extends JFrame {
         tabbedPane.add("Join", joinPanel);
 
         pack();
-        setSize(300, 400);
+        setSize(WIDTH, HEIGHT);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

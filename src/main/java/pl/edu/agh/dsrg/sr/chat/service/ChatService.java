@@ -22,7 +22,6 @@ import static pl.edu.agh.dsrg.sr.chat.protos.ChatOperationProtos.*;
  * Created by P on 09.05.2016.
  */
 public class ChatService {
-    private static final String CHANNEL_PREFIX = "Channel";
     private JChannel managementChannel;
     private Map<String, List<String>> channelUsers;
     private Map<String, JChannel> channels;
@@ -106,6 +105,7 @@ public class ChatService {
         if (!address.isMulticastAddress()) {
             throw new Exception(address + "is not a multicast address!");
         }
+
         JChannel channel = new JChannel(false);
         channel.setName(nick);
 
