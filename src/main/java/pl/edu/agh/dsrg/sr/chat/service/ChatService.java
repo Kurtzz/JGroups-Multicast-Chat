@@ -100,7 +100,7 @@ public class ChatService {
             return;
         }
 
-        InetAddress address = InetAddress.getByName(name);
+        InetAddress address = InetAddress.getByName("230.0.0." + name);
 
         if (!address.isMulticastAddress()) {
             throw new Exception(address + "is not a multicast address!");

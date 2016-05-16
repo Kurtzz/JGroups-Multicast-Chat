@@ -67,7 +67,7 @@ public class Chat extends JFrame {
             public void windowClosed(WindowEvent e) {
                 chatService.leaveManagementChannel();
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                     System.exit(0);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
